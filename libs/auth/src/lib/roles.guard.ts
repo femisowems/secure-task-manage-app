@@ -1,5 +1,6 @@
 
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import type { CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { UserRole } from '@secure-task-manage-app/data/enums';
 import { RbacService } from './rbac.service';

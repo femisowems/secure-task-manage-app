@@ -22,14 +22,14 @@ export class RbacService {
         return false;
     }
 
-    canCreateTask(user: User): boolean {
+    canCreateTask(_user: User): boolean {
         // All roles allowed to create task in their own org
         // "organizationId must equal user.organizationId" is a data constraint check rather than permission boolean here
         // But boolean check is: Yes, they can create.
         return true;
     }
 
-    async canReadTasks(user: User): Promise<boolean> {
+    async canReadTasks(_user: User): Promise<boolean> {
         // Logic handled in service query filtering usually, but as a check:
         return true;
     }

@@ -8,26 +8,26 @@ import { UserRole, ActionType } from './enums';
 @Entity('organizations')
 export class Organization {
     @PrimaryGeneratedColumn('uuid')
-    id: string;
+    id!: string;
 
-    @Column()
-    name: string;
+    @Column({ type: 'text' })
+    name!: string;
 
-    @Column({ nullable: true })
-    parentOrganizationId: string;
+    @Column({ type: 'text', nullable: true })
+    parentOrganizationId!: string;
 
     @ManyToOne(() => Organization, (org) => org.childOrganizations, { nullable: true })
     @JoinColumn({ name: 'parentOrganizationId' })
-    parentOrganization: Organization;
+    parentOrganization!: Organization;
 
     @OneToMany(() => Organization, (org) => org.parentOrganization)
-    childOrganizations: Organization[];
+    childOrganizations!: Organization[];
 
     @OneToMany(() => User, (user) => user.organization)
-    users: User[];
+    users!: User[];
 
     @OneToMany(() => Task, (task) => task.organization)
-    tasks: Task[];
+    tasks!: Task[];
 }
 
 // --------------------------------------------------
@@ -36,30 +36,30 @@ export class Organization {
 @Entity('users')
 export class User {
     @PrimaryGeneratedColumn('uuid')
-    id: string;
+    id!: string;
 
-    @Column({ unique: true })
-    email: string;
+    @Column({ type: 'text', unique: true })
+    email!: string;
 
-    @Column()
-    passwordHash: string;
+    @Column({ type: 'text' })
+    passwordHash!: string;
 
     @Column({
         type: 'simple-enum',
         enum: UserRole,
         default: UserRole.VIEWER
     })
-    role: UserRole;
+    role!: UserRole;
 
-    @Column()
-    organizationId: string;
+    @Column({ type: 'text' })
+    organizationId!: string;
 
     @ManyToOne(() => Organization, (org) => org.users)
     @JoinColumn({ name: 'organizationId' })
-    organization: Organization;
+    organization!: Organization;
 
     @CreateDateColumn()
-    createdAt: Date;
+    createdAt!: Date;
 }
 
 // --------------------------------------------------
@@ -68,39 +68,39 @@ export class User {
 @Entity('tasks')
 export class Task {
     @PrimaryGeneratedColumn('uuid')
-    id: string;
+    id!: string;
 
-    @Column()
-    title: string;
+    @Column({ type: 'text' })
+    title!: string;
 
-    @Column()
-    description: string;
+    @Column({ type: 'text' })
+    description!: string;
 
-    @Column()
-    category: string;
+    @Column({ type: 'text' })
+    category!: string;
 
-    @Column()
-    status: string;
+    @Column({ type: 'text' })
+    status!: string;
 
-    @Column()
-    organizationId: string;
+    @Column({ type: 'text' })
+    organizationId!: string;
 
     @ManyToOne(() => Organization, (org) => org.tasks)
     @JoinColumn({ name: 'organizationId' })
-    organization: Organization;
+    organization!: Organization;
 
-    @Column()
-    createdBy: string;
+    @Column({ type: 'text' })
+    createdBy!: string;
 
     @ManyToOne(() => User)
     @JoinColumn({ name: 'createdBy' })
-    creator: User;
+    creator!: User;
 
     @CreateDateColumn()
-    createdAt: Date;
+    createdAt!: Date;
 
     @UpdateDateColumn()
-    updatedAt: Date;
+    updatedAt!: Date;
 }
 
 // --------------------------------------------------
@@ -109,23 +109,23 @@ export class Task {
 @Entity('audit_logs')
 export class AuditLog {
     @PrimaryGeneratedColumn('uuid')
-    id: string;
+    id!: string;
 
-    @Column()
-    userId: string;
+    @Column({ type: 'text' })
+    userId!: string;
 
     @Column({
         type: 'simple-enum',
         enum: ActionType
     })
-    action: ActionType;
+    action!: ActionType;
 
-    @Column()
-    resourceType: string;
+    @Column({ type: 'text' })
+    resourceType!: string;
 
-    @Column({ nullable: true })
-    resourceId: string;
+    @Column({ type: 'text', nullable: true })
+    resourceId!: string;
 
     @CreateDateColumn()
-    timestamp: Date;
+    timestamp!: Date;
 }

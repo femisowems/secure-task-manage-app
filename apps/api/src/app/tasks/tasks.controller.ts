@@ -10,22 +10,22 @@ export class TasksController {
     constructor(private tasksService: TasksService) { }
 
     @Post()
-    create(@Request() req, @Body() body) {
+    create(@Request() req: any, @Body() body: any) {
         return this.tasksService.create(req.user, body);
     }
 
     @Get()
-    findAll(@Request() req) {
+    findAll(@Request() req: any) {
         return this.tasksService.findAll(req.user);
     }
 
     @Put(':id')
-    update(@Request() req, @Param('id') id: string, @Body() body) {
+    update(@Request() req: any, @Param('id') id: string, @Body() body: any) {
         return this.tasksService.update(req.user, id, body);
     }
 
     @Delete(':id')
-    remove(@Request() req, @Param('id') id: string) {
+    remove(@Request() req: any, @Param('id') id: string) {
         return this.tasksService.delete(req.user, id);
     }
 }

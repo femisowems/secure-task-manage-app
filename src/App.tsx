@@ -1,12 +1,16 @@
-import './App.css'
+
+import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from './core/auth.context';
+import { AppRoutes } from './routes/AppRoutes';
 
 function App() {
   return (
-    <div style={{ padding: '2rem', textAlign: 'center' }}>
-      <h1>Secure Task Management App</h1>
-      <p>Workspace initialized successfully.</p>
-    </div>
-  )
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

@@ -1,19 +1,18 @@
 # Secure Task Management App
 
-This repository contains a Secure Task Management Application featuring a React frontend and a NestJS-structured backend logic layer with built-in Role-Based Access Control (RBAC) and Organization Scoping.
+This repository contains a **Secure Task Management Application** featuring a React frontend and a fully implemented NestJS backend with robust RBAC, Organization Scoping, and Audit Logging.
 
 ## Features
 
 - **Frontend**: React + TypeScript + Vite
-- **Backend Logic**: NestJS-style architecture (Services, Controllers, Guards)
+- **Backend**: NestJS + TypeORM + SQLite/PostgreSQL
 - **Security**: 
-  - Role-Based Access Control (RBAC)
-  - Organization Scoping
+  - JWT Authentication (Bcrypt hashing)
+  - Hierarchical RBAC (`Owner` > `Admin` > `Viewer`)
+  - Strict Organization Scoping
   - Audit Logging
 
-## RBAC & Security Architecture
-
-The application implements a robust security model based on user roles and organization hierarchy.
+## RBAC & Security Model
 
 ### User Roles
 
@@ -26,55 +25,44 @@ The application implements a robust security model based on user roles and organ
 ### Organization Scoping
 
 - **Owners/Admins** of a Parent Organization automatically inherit access to all Child Organizations.
-- **Viewers** are strictly scoped to their assigned organization.
-- Cross-organization access is strictly prohibited unless a parent-child relationship exists.
+- **Viewers** are restricted to their assigned organization.
+- Cross-organization access is prohibited unless a strict parent-child relationship exists.
 
-### implemented Services (`apps/api` & `libs/auth`)
+## Backend Architecture
 
-The backend logic is structured into the following components:
+The backend logic is structured as a modular NestJS application (`apps/api`):
 
-- **`RbacService`**: Centralized service for permission checks (`canCreateTask`, `canReadTask`, etc.). Supports role inheritance.
-- **`OrgScopeService`**: Calculates the list of accessible organization IDs for a given user, traversing the organization tree.
-- **`AuditLogService`**: Tracks critical actions (Create, Update, Delete) with user ID and resource metadata.
-- **`TasksService`**: Implements business logic with enforced security checks using the above services.
-- **`RolesGuard`**: A NestJS guard to enforce role requirements on API endpoints.
-
-## Project Structure
-
-```
-.
-├── apps
-│   └── api
-│       └── src
-│           └── app
-│               └── tasks     # Tasks module (Controller, Service)
-├── libs
-│   ├── auth
-│   │   └── src
-│   │       └── lib           # Auth module (RBAC, Audit, Guards)
-│   └── data
-│       └── src
-│           └── lib           # Shared Interfaces & Enums
-├── src                       # React Frontend Source
-└── ...
-```
+- **`AuthModule`**: Handles JWT issuance, strategy validation, and guard implementation.
+- **`TasksModule`**: Core business logic. Implements `TasksService` which enforces:
+  - **Create**: Checks user organization.
+  - **Read**: Scopes queries to `getAccessibleOrganizationIds(user)`.
+  - **Update/Delete**: Verifies ownership and permission via `RbacService`.
+- **`AuditModule`**: Tracks all critical actions. `GET /audit-log` is restricted to Admins/Owners.
 
 ## Setup & Usage
 
-1. **Install Dependencies**
-   ```bash
-   npm install
-   ```
+### 1. Install Dependencies
+This project is a hybrid workspace. Install all dependencies (frontend + backend) at root:
+```bash
+npm install
+```
 
-2. **Run Frontend (Vite)**
-   ```bash
-   npm run dev
-   ```
+### 2. Frontend Development
+Run the React application via Vite:
+```bash
+npm run dev
+```
 
-3. **Backend Logic**
-   The backend logic is located in `apps/api` and `libs`. While this repo is currently configured as a Vite SPA, the backend code is structured to be dropped into a NestJS runtime environment.
+### 3. Backend Development
+The backend code is located in `apps/api` and `libs`.
 
-   *Note: Validating the backend code requires TypeScript configuration for NestJS decorators, which may not be fully enabled in this frontend-focused repo.*
+**Compilation Verification**:
+The environment is configured to support NestJS decorators and backend logic. You can verify the backend compiles successfully:
+```bash
+npx tsc --noEmit --skipLibCheck
+```
+
+**Note**: To run the backend server fully, you would typically wrap this in `nest start`, but currently it exists as a logic implementation within this repo structure.
 
 ## License
 

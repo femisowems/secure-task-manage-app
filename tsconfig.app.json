@@ -24,9 +24,10 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
+    "erasableSyntaxOnly": false,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+    "strictPropertyInitialization": false,
     /* Backend Support */
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

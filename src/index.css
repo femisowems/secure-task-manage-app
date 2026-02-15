@@ -1,63 +1,10 @@
-:root {
-  /* Color Palette */
-  --color-primary: #3b82f6;
-  --color-secondary: #64748b;
-  --color-accent: #8b5cf6;
-  --color-background: #0f172a;
-  --color-surface: #1e293b;
-  --color-text: #f8fafc;
-  --color-text-muted: #94a3b8;
-  --color-border: #334155;
 
-  /* Typography */
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'Fira Code', monospace;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  /* Spacing */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-
-  /* Borders */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-}
-
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: var(--font-sans);
-  background-color: var(--color-background);
-  color: var(--color-text);
-  line-height: 1.6;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  line-height: 1.2;
-  margin-bottom: var(--spacing-md);
-  font-weight: 700;
-}
-
-a {
-  color: var(--color-primary);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-a:hover {
-  color: var(--color-accent);
-}
-
-button {
-  cursor: pointer;
-  font-family: inherit;
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
 }
