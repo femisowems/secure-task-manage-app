@@ -5,6 +5,6 @@ import { Controller, Get } from '@nestjs/common';
 export class AppController {
     @Get()
     getHello() {
-        return { status: 'Secure Task Management API is running', version: '1.0.0' };
+        return { status: 'Secure Task Management App API is running', version: '1.0.0' };
     }
 }

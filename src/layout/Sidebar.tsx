@@ -19,7 +19,7 @@ export const Sidebar: React.FC = () => {
     return (
         <div className="w-64 h-screen bg-white border-r border-gray-200 flex flex-col">
             <div className="p-6 border-b border-gray-100">
-                <h1 className="text-xl font-bold text-indigo-600">SecureTask</h1>
+                <h1 className="text-xl font-bold text-indigo-600 leading-tight">Secure Task<br />Management App</h1>
                 <p className="text-xs text-gray-400 mt-1 uppercase tracking-wider">{user?.role}</p>
             </div>
 
