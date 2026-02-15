@@ -1,5 +1,5 @@
 
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Request, Inject } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'; // need to implement this file
 import { RolesGuard } from '@secure-task-manage-app/auth/roles.guard';
@@ -7,7 +7,7 @@ import { RolesGuard } from '@secure-task-manage-app/auth/roles.guard';
 @Controller('tasks')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class TasksController {
-    constructor(private tasksService: TasksService) { }
+    constructor(@Inject(TasksService) private tasksService: TasksService) { }
 
     @Post()
     create(@Request() req: any, @Body() body: any) {

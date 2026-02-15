@@ -1,5 +1,5 @@
 
-import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
+import { Injectable, ForbiddenException, NotFoundException, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { Task, User } from '@secure-task-manage-app/data/entities';
@@ -13,8 +13,11 @@ export class TasksService {
     constructor(
         @InjectRepository(Task)
         private tasksRepo: Repository<Task>,
+        @Inject(RbacService)
         private rbacService: RbacService,
+        @Inject(OrgScopeService)
         private orgScopeService: OrgScopeService,
+        @Inject(AuditService)
         private auditService: AuditService
     ) { }
 

@@ -6,38 +6,22 @@ This repository contains a **Secure Task Management Application** featuring a Re
 
 - **Frontend**: React + TypeScript + Vite
 - **Backend**: NestJS + TypeORM + SQLite/PostgreSQL
+- **Styling**: Tailwind CSS v4.0 (CSS-first engine)
 - **Security**: 
   - JWT Authentication (Bcrypt hashing)
   - Hierarchical RBAC (`Owner` > `Admin` > `Viewer`)
   - Strict Organization Scoping
   - Audit Logging
+  - Metadata-stable runtime (explicit `@Inject` decorators)
 
-## RBAC & Security Model
+## Test Credentials
 
-### User Roles
+Use these credentials to test the RBAC and organization scoping features:
 
-| Role   | Description | Hierarchy |
-| :---   | :---        | :---      |
-| **Owner** | Full access to their organization and all child organizations. | `Owner > Admin > Viewer` |
-| **Admin** | Administrative access within their organization scope. | `Admin > Viewer` |
-| **Viewer**| Read-only access, limited to tasks they created or exist in their org. | Lowest level |
-
-### Organization Scoping
-
-- **Owners/Admins** of a Parent Organization automatically inherit access to all Child Organizations.
-- **Viewers** are restricted to their assigned organization.
-- Cross-organization access is prohibited unless a strict parent-child relationship exists.
-
-## Backend Architecture
-
-The backend logic is structured as a modular NestJS application (`apps/api`):
-
-- **`AuthModule`**: Handles JWT issuance, strategy validation, and guard implementation.
-- **`TasksModule`**: Core business logic. Implements `TasksService` which enforces:
-  - **Create**: Checks user organization.
-  - **Read**: Scopes queries to `getAccessibleOrganizationIds(user)`.
-  - **Update/Delete**: Verifies ownership and permission via `RbacService`.
-- **`AuditModule`**: Tracks all critical actions. `GET /audit-log` is restricted to Admins/Owners.
+| User Type | Email | Password | Role |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `admin@test.com` | `password123` | **Owner** (Full Scope) |
+| **User** | `user@test.com` | `password123` | **Viewer** (Scoped to Org) |
 
 ## Setup & Usage
 
@@ -47,23 +31,30 @@ This project is a hybrid workspace. Install all dependencies (frontend + backend
 npm install
 ```
 
-### 2. Frontend Development
-Run the React application via Vite:
+### 2. Run the Application
+Start both the Frontend (Vite) and Backend (NestJS/tsx) concurrently:
 ```bash
-npm run dev
+npm run start:all
 ```
 
-### 3. Backend Development
-The backend code is located in `apps/api` and `libs`.
+- **Frontend**: [http://localhost:5173](http://localhost:5173)
+- **API**: [http://localhost:3001/api](http://localhost:3001/api)
 
-**Compilation Verification**:
-The environment is configured to support NestJS decorators and backend logic. You can verify the backend compiles successfully:
+### 3. Build for Production
 ```bash
-npx tsc --noEmit --skipLibCheck
+npm run build
 ```
 
-**Note**: To run the backend server fully, you would typically wrap this in `nest start`, but currently it exists as a logic implementation within this repo structure.
+## Backend Architecture
 
-## License
+The backend logic is modularized for security and scalability:
 
-Private
+- **`AuthModule`**: Shared services/guards. Re-organized to handle metadata limitations of development runtimes like `tsx`.
+- **`TasksModule`**: Enforces organization scoping and dynamic RBAC checks for all task operations.
+- **`AuditModule`**: Centralized logging for compliance across all user actions.
+
+## Documentation Artifacts
+Internal documentation and implementation details can be found in the `.gemini/antigravity/brain` directory.
+
+---
+**Note**: This environment uses `tsx` for high-performance backend execution without a separate build step during development. Explicit `@Inject()` decorators are used to ensure dependency injection stability.

@@ -6,8 +6,7 @@ import { TasksService } from './tasks.service';
 import { TasksController } from './tasks.controller';
 import { AuthModule } from '../auth/auth.module'; // for guards/auth services if exported
 import { AuditModule } from '../audit/audit.module';
-import { RbacService } from '@secure-task-manage-app/auth/rbac.service';
-import { OrgScopeService } from '@secure-task-manage-app/auth/org-scope.service';
+
 
 @Module({
     imports: [
@@ -15,7 +14,7 @@ import { OrgScopeService } from '@secure-task-manage-app/auth/org-scope.service'
         AuditModule,
         AuthModule
     ],
-    providers: [TasksService, RbacService, OrgScopeService], // Provide usage services locally or import via module
+    providers: [TasksService], // Provided via AuthModule now
     controllers: [TasksController],
 })
 export class TasksModule { }

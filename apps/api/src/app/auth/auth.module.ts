@@ -7,6 +7,8 @@ import { JwtStrategy } from './jwt.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User, Organization } from '@secure-task-manage-app/data/entities';
 import { AuthController } from './auth.controller';
+import { RbacService } from '@secure-task-manage-app/auth/rbac.service';
+import { OrgScopeService } from '@secure-task-manage-app/auth/org-scope.service';
 
 @Module({
     imports: [
@@ -17,8 +19,8 @@ import { AuthController } from './auth.controller';
             signOptions: { expiresIn: '60m' },
         }),
     ],
-    providers: [AuthService, JwtStrategy],
+    providers: [AuthService, JwtStrategy, RbacService, OrgScopeService],
     controllers: [AuthController],
-    exports: [AuthService],
+    exports: [AuthService, RbacService, OrgScopeService],
 })
 export class AuthModule { }

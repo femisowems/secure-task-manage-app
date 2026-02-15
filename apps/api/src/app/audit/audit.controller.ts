@@ -1,5 +1,5 @@
 
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards, Inject } from '@nestjs/common';
 import { AuditService } from './audit.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'; // Assume this will be created or standard
 import { RolesGuard } from '@secure-task-manage-app/auth/roles.guard';
@@ -11,7 +11,7 @@ import { UserRole } from '@secure-task-manage-app/data/enums';
 @Controller('audit-log')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class AuditController {
-    constructor(private auditService: AuditService) { }
+    constructor(@Inject(AuditService) private auditService: AuditService) { }
 
     @Get()
     @Roles(UserRole.OWNER, UserRole.ADMIN)

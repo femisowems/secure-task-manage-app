@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { TasksModule } from './tasks/tasks.module';
 import { AuditModule } from './audit/audit.module';
+import { AppController } from './app.controller';
 import { User, Organization, Task, AuditLog } from '@secure-task-manage-app/data/entities';
 
 @Module({
@@ -19,5 +20,6 @@ import { User, Organization, Task, AuditLog } from '@secure-task-manage-app/data
         TasksModule,
         AuditModule,
     ],
+    controllers: [AppController],
 })
 export class AppModule { }

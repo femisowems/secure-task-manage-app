@@ -1,12 +1,12 @@
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { User, Task } from '@secure-task-manage-app/data/entities';
 import { UserRole } from '@secure-task-manage-app/data/enums';
 import { OrgScopeService } from './org-scope.service';
 
 @Injectable()
 export class RbacService {
-    constructor(private readonly orgScopeService: OrgScopeService) { }
+    constructor(@Inject(OrgScopeService) private readonly orgScopeService: OrgScopeService) { }
 
     hasRequiredRole(userRole: UserRole, requiredRoles: UserRole[]): boolean {
         if (requiredRoles.includes(userRole)) return true;
