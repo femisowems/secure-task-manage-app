@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { api } from '../../core/api';
+import api from '../../core/api';
 import type { AuditLog } from '../../types';
 import { Clock, User as UserIcon, Activity } from 'lucide-react';
 

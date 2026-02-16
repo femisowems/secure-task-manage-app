@@ -1,13 +1,31 @@
+import 'dotenv/config';
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { ValidationPipe } from '@nestjs/common';
 
+import helmet from 'helmet';
+
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.setGlobalPrefix('api');
-    app.useGlobalPipes(new ValidationPipe());
-    app.enableCors();
+
+    // Security Middleware
+    app.use(helmet());
+
+    // Global Validation
+    app.useGlobalPipes(new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+    }));
+
+    // Strict CORS
+    app.enableCors({
+        origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'],
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        credentials: true,
+    });
 
     const port = process.env.PORT || 3001;
     await app.listen(port);

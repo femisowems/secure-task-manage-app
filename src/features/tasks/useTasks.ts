@@ -1,6 +1,6 @@
 
 import { useState, useCallback, useEffect } from 'react';
-import { api } from '../../core/api';
+import api from '../../core/api';
 import type { Task } from '../../types';
 
 export const useTasks = () => {

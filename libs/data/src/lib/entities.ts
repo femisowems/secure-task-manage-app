@@ -38,11 +38,14 @@ export class User {
     @PrimaryGeneratedColumn('uuid')
     id!: string;
 
+    @Column({ type: 'text', unique: true, nullable: true })
+    supabaseUserId!: string | null;
+
     @Column({ type: 'text', unique: true })
     email!: string;
 
-    @Column({ type: 'text' })
-    passwordHash!: string;
+    @Column({ type: 'text', nullable: true })
+    passwordHash!: string | null;
 
     @Column({
         type: 'simple-enum',

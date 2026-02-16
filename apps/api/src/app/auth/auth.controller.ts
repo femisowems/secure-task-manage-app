@@ -1,29 +1,19 @@
-import { Controller, Post, Body, UnauthorizedException, ConflictException, Inject } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { CreateSignupDto } from './dto/signup.dto';
+
+import { Controller, Get, UseGuards, Req } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
-    constructor(@Inject(AuthService) private authService: AuthService) { }
+    constructor() { }
 
-    @Post('login')
-    async login(@Body() req: any) {
-        const user = await this.authService.validateUser(req.email, req.password);
-        if (!user) {
-            throw new UnauthorizedException();
-        }
-        return this.authService.login(user);
-    }
-
-    @Post('signup')
-    async signup(@Body() dto: CreateSignupDto) {
-        try {
-            return await this.authService.signup(dto);
-        } catch (error: any) {
-            if (error.message === 'User already exists') {
-                throw new ConflictException('User with this email already exists');
-            }
-            throw error;
-        }
+    @Get('me')
+    @UseGuards(AuthGuard('supabase-jwt'))
+    async getMe(@Req() req: any) {
+        return {
+            id: req.user.id,
+            email: req.user.email,
+            role: req.user.role,
+            organizationId: req.user.organizationId
+        };
     }
 }

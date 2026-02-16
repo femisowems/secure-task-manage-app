@@ -1,15 +1,25 @@
-
 import axios from 'axios';
-import { authService } from './auth.service';
+import { supabase } from './supabase.client';
 
-export const api = axios.create({
-    baseURL: '/api', // Vite proxy handles this? Or separate host. Assuming standard /api proxy.
+const api = axios.create({
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3001/api',
+});
+
+let authToken: string | null = null;
+
+// Initial token sync
+supabase.auth.getSession().then(({ data: { session } }) => {
+    authToken = session?.access_token || null;
+});
+
+// Keep token in sync with auth state changes
+supabase.auth.onAuthStateChange((_event, session) => {
+    authToken = session?.access_token || null;
 });
 
 api.interceptors.request.use((config) => {
-    const token = authService.getToken();
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+    if (authToken) {
+        config.headers.Authorization = `Bearer ${authToken}`;
     }
     return config;
 });
@@ -18,9 +28,13 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
-            authService.logout();
-            window.location.href = '/login';
+            supabase.auth.signOut();
+            if (window.location.pathname !== '/login') {
+                window.location.href = '/login';
+            }
         }
         return Promise.reject(error);
     }
 );
+
+export default api;

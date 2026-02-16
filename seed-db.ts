@@ -1,6 +1,6 @@
 
 import { DataSource } from 'typeorm';
-import { User, Organization } from './libs/data/src/lib/entities';
+import { User, Organization, Task, AuditLog } from './libs/data/src/lib/entities';
 import { UserRole } from './libs/data/src/lib/enums';
 import * as bcrypt from 'bcrypt';
 
@@ -8,7 +8,7 @@ async function seed() {
     const dataSource = new DataSource({
         type: 'sqlite',
         database: 'database.sqlite',
-        entities: [User, Organization],
+        entities: [User, Organization, Task, AuditLog],
         synchronize: true,
     });
 

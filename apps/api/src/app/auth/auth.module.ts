@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './jwt.strategy';
+import { SupabaseJwtStrategy } from './supabase-jwt.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User, Organization } from '@secure-task-manage-app/data/entities';
 import { AuthController } from './auth.controller';
@@ -19,7 +19,7 @@ import { OrgScopeService } from '@secure-task-manage-app/auth/org-scope.service'
             signOptions: { expiresIn: '60m' },
         }),
     ],
-    providers: [AuthService, JwtStrategy, RbacService, OrgScopeService],
+    providers: [AuthService, SupabaseJwtStrategy, RbacService, OrgScopeService],
     controllers: [AuthController],
     exports: [AuthService, RbacService, OrgScopeService],
 })

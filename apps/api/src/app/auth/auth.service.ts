@@ -1,12 +1,9 @@
 
-import { Injectable, Inject } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, Organization } from '@secure-task-manage-app/data/entities';
 import { UserRole } from '@secure-task-manage-app/data/enums';
-import { CreateSignupDto } from './dto/signup.dto';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -14,59 +11,48 @@ export class AuthService {
         @InjectRepository(User)
         private usersRepository: Repository<User>,
         @InjectRepository(Organization)
-        private orgRepository: Repository<Organization>,
-        @Inject(JwtService)
-        private jwtService: JwtService
+        private orgRepository: Repository<Organization>
     ) { }
 
-    async validateUser(email: string, pass: string): Promise<any> {
-        const user = await this.usersRepository.findOne({ where: { email } });
-        if (user && (await bcrypt.compare(pass, user.passwordHash))) {
-            const { passwordHash, ...result } = user;
-            return result;
+    async validateSupabaseUser(payload: any): Promise<any> {
+        const { sub: supabaseUserId, email, user_metadata } = payload;
+        const role = user_metadata?.role || UserRole.VIEWER;
+
+        let user = await this.usersRepository.findOne({ where: { supabaseUserId } });
+
+        if (!user) {
+            // Check if a user with same email exists (potential link)
+            user = await this.usersRepository.findOne({ where: { email } });
+            if (user) {
+                // Link existing user to supabase
+                user.supabaseUserId = supabaseUserId;
+                // Optional: Update role if we want to trust the metadata on link, 
+                // but usually we keep existing role. Let's keep existing role for security on link.
+                await this.usersRepository.save(user);
+            } else {
+                // Create new user
+                let defaultOrg = await this.orgRepository.findOne({ where: { name: 'Default Organization' } });
+                if (!defaultOrg) {
+                    defaultOrg = this.orgRepository.create({
+                        name: 'Default Organization'
+                    });
+                    await this.orgRepository.save(defaultOrg);
+                }
+
+                user = this.usersRepository.create({
+                    supabaseUserId,
+                    email,
+                    role: role as UserRole, // Use the role from metadata
+                    organizationId: defaultOrg.id
+                });
+                await this.usersRepository.save(user);
+            }
         }
-        return null;
+
+        return user;
     }
 
-    async login(user: any) {
-        const payload = {
-            sub: user.id,
-            email: user.email,
-            role: user.role,
-            organizationId: user.organizationId
-        };
-        return {
-            access_token: this.jwtService.sign(payload),
-        };
-    }
-
-    async signup(dto: CreateSignupDto) {
-        const { email, password } = dto;
-
-        const existingUser = await this.usersRepository.findOne({ where: { email } });
-        if (existingUser) {
-            throw new Error('User already exists');
-        }
-
-        let defaultOrg = await this.orgRepository.findOne({ where: { name: 'Default Organization' } });
-        if (!defaultOrg) {
-            defaultOrg = this.orgRepository.create({
-                name: 'Default Organization',
-                parentOrganizationId: undefined
-            });
-            await this.orgRepository.save(defaultOrg);
-        }
-
-        const passwordHash = await bcrypt.hash(password, 10);
-        const user = this.usersRepository.create({
-            email,
-            passwordHash,
-            role: UserRole.VIEWER,
-            organizationId: defaultOrg.id
-        });
-
-        await this.usersRepository.save(user);
-
-        return { message: 'Account created successfully' };
+    async getMe(userId: string): Promise<any> {
+        return this.usersRepository.findOne({ where: { id: userId } });
     }
 }
