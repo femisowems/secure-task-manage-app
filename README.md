@@ -1,6 +1,6 @@
 # Secure Task Management App
 
-A premium, enterprise-grade **Secure Task Management Application** featuring dual frontend support (React & Angular) and a robust NestJS backend. This project demonstrates advanced security patterns, including Supabase JWT integration, hierarchical Role-Based Access Control (RBAC), and multi-tenant Organization Scoping.
+A premium, enterprise-grade **Secure Task Management Application** featuring a high-performance React frontend and a robust NestJS backend. This project demonstrates advanced security patterns, including Supabase JWT integration, hierarchical Role-Based Access Control (RBAC), and multi-tenant Organization Scoping.
 
 ## 🚀 Key Features
 
@@ -9,12 +9,10 @@ A premium, enterprise-grade **Secure Task Management Application** featuring dua
   - **Hierarchical RBAC**: Granular permission system (`Owner` > `Admin` > `Viewer`).
   - **Multi-Tenant Scoping**: Strict organization isolation with parent-child relationship support.
   - **Compliance Logging**: Automated audit tracking for all sensitive operations (Create, Update, Delete).
-- **Dual Frontend Architecture**:
-  - **Angular Dashboard**: Modern Angular 19+ app utilizing **Signals**, **Angular CDK (Kanban Board)**, and premium Tailwind v4 styling.
-  - **React Frontend**: High-performance React 19 + TypeScript + Vite implementation.
-- **Premium Design**:
-  - **Interactive Kanban**: Drag-and-drop task management with real-time status updates.
-  - **Aesthetics**: Glassmorphism UI with Lucide icons and Inter typography across frameworks.
+- **Modern Tech Stack**:
+  - **Frontend**: React 19 + TypeScript + Vite + Tailwind CSS v4.
+  - **Backend**: NestJS + TypeORM + SQLite (Local Dev).
+  - **Design**: Premium Glassmorphism UI with Lucide icons and Inter typography.
 
 ## 🔑 Test Credentials
 
@@ -47,13 +45,13 @@ npm install
 ```
 
 ### 4. Run Development Servers
+```bash
+# Start Frontend & Backend concurrently
+npm run start:all
+```
 
-| Command | Action | URL |
-| :--- | :--- | :--- |
-| `npm run start:react` | Start React Frontend | [http://localhost:5173](http://localhost:5173) |
-| `npm run start:angular` | Start Angular Dashboard | [http://localhost:4200](http://localhost:4200) |
-| `npm run start:api` | Start NestJS Backend | [http://localhost:3001/api](http://localhost:3001/api) |
-| `npm run start:all` | Start EVERYTHING | (All of the above) |
+- **Frontend**: [http://localhost:5173](http://localhost:5173)
+- **API (Swagger)**: [http://localhost:3001/api](http://localhost:3001/api)
 
 ## 🏗️ Architecture Detail
 
@@ -61,21 +59,28 @@ npm install
 - **`SupabaseJwtStrategy`**: Validates incoming JWTs against Supabase's public keys (`ES256`).
 - **`RbacService`**: Centralized logic for role inheritance and permission checks.
 - **`OrgScopeService`**: Handles parent/child organization visibility logic.
+- **`AuditService`**: Intercepts actions to log user activity for audit trails.
 
-### Angular Dashboard (Modern)
-- **`Signals`**: state management for high-performance reactive updates.
-- **`CDK Drag & Drop`**: Interactive Kanban board for task management.
-- **`Tailwind v4`**: Automated CLI build for premium styling.
+### Frontend (React)
+- **`AuthContext`**: Manages session state and profile synchronization with the backend.
+- **`api.ts`**: Optimized Axios client with synchronous token injection and 401 interceptors.
+- **`RoleProtectedRoute`**: Client-side navigation guards based on user hierarchical roles.
 
 ## 📂 Project Structure
 
 ```text
 ├── apps/api/src/app/       # Backend (NestJS)
-├── apps/dashboard/         # New Angular Dashboard (v19)
-│   ├── src/app/core/       # Signals-based Stores & Interceptors
-│   └── src/app/features/   # Kanban Board & Audit Components
-├── src/                    # Original React 19 Frontend
-├── libs/                   # Shared Business Logic (RBAC/Org Scoping)
+│   ├── auth/               # Auth controllers & strategies
+│   ├── audit/              # Audit logging modules
+│   └── tasks/              # Task management controllers
+├── libs/                   # Shared Business Logic
+│   ├── auth/               # RBAC, Org Scoping, Roles guards
+│   └── data/               # TypeORM Entities & Enums
+├── src/                    # Frontend (React 19)
+│   ├── core/               # API clients & Auth context
+│   ├── features/           # Feature-based components (Tasks, Audit)
+│   ├── layout/             # Sidebar & Dashboard wrappers
+│   └── routes/             # Protected routing logic
 ├── scripts/                # Database migration & utility scripts
 └── database.sqlite         # Local SQLite storage
 ```
@@ -84,4 +89,4 @@ npm install
 MIT
 
 ---
-**Note**: This workspace is optimized for multi-framework experimentation. All frontends communicate with the same secure NestJS API on port 3001.
+**Note**: This project is optimized for high-performance development using `tsx` and `dotenv` for seamless environment management.
