@@ -1,8 +1,10 @@
 {
     "compilerOptions": {
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext",
+        "module": "ESNext",
+        "moduleResolution": "node",
         "target": "ESNext",
+        "allowJs": true,
+        "resolveJsonModule": true,
         "sourceMap": true,
         "declaration": true,
         "experimentalDecorators": true,
