@@ -1,7 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
+@import "../libs/design-system/theme.css";
 
 @layer base {
   body {
-    @apply bg-gray-50 text-gray-900;
+    @apply bg-surface text-text-primary antialiased;
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
   }
 }

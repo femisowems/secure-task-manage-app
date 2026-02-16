@@ -20,23 +20,25 @@ export const TaskForm: React.FC<TaskFormProps> = ({ initialData, onSubmit, onCan
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-grid-md">
             <div>
-                <label className="block text-sm font-medium text-gray-700">Title</label>
+                <label className="block text-body-sm font-semibold text-text-primary mb-1">Title</label>
                 <input
                     type="text"
                     required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-grid-md py-grid-sm bg-surface border border-border-subtle rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-body text-text-primary"
+                    placeholder="Enter task title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                 />
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700">Description</label>
+                <label className="block text-body-sm font-semibold text-text-primary mb-1">Description</label>
                 <textarea
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-grid-md py-grid-sm bg-surface border border-border-subtle rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-body text-text-primary"
                     rows={3}
+                    placeholder="Enter task description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
@@ -69,17 +71,17 @@ export const TaskForm: React.FC<TaskFormProps> = ({ initialData, onSubmit, onCan
                 </div>
             </div>
 
-            <div className="flex justify-end space-x-3 pt-4">
+            <div className="flex justify-end gap-grid-md pt-grid-lg border-t border-border-subtle">
                 <button
                     type="button"
                     onClick={onCancel}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 border border-gray-300 rounded-md"
+                    className="px-grid-md py-grid-sm text-body-sm font-medium text-text-secondary hover:bg-gray-50 border border-border-subtle rounded-md transition-colors"
                 >
                     Cancel
                 </button>
                 <button
                     type="submit"
-                    className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md"
+                    className="px-grid-md py-grid-sm text-body-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md shadow-sm transition-colors"
                 >
                     {initialData ? 'Update Task' : 'Create Task'}
                 </button>

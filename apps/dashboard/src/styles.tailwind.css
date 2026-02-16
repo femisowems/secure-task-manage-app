@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
+@import "../../../libs/design-system/theme.css";
 @source "./app/**/*.{html,ts}";
+@source "../../../libs/design-system";
 
 .test-scan-manual {
     @apply bg-red-500 rounded-full;

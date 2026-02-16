@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, effect } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -10,56 +10,65 @@ import { SupabaseService } from '../../../core/services/supabase.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   template: `
-    <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-        <div>
-          <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Create your account</h2>
-          <p class="mt-2 text-center text-sm text-gray-600">
+    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 px-4">
+      <!-- Auth Card -->
+      <div class="w-full max-w-md bg-white/80 backdrop-blur-md border border-slate-200 rounded-2xl shadow-xl p-grid-xl md:p-10 space-y-grid-lg">
+        <div class="text-center space-y-grid-xs">
+          <h2 class="text-2xl font-semibold tracking-tight text-slate-900">Create your account</h2>
+          <p class="text-sm text-slate-500">
             Secure Task Management App
           </p>
         </div>
         
-        <form class="mt-8 space-y-6" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-          <div class="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label for="email-address" class="sr-only">Email address</label>
+        <form class="space-y-grid-lg" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+          <div class="space-y-grid-md">
+            <div class="space-y-grid-xs">
+              <label for="email-address" class="text-sm font-medium text-slate-700">Email address</label>
               <input formControlName="email" id="email-address" name="email" type="email" autocomplete="email" required 
-                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" 
-                placeholder="Email address">
+                class="w-full h-11 px-grid-md rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm transition-all" 
+                placeholder="name@example.com"
+                [attr.aria-invalid]="signupForm.get('email')?.invalid && signupForm.get('email')?.touched">
             </div>
-            <div>
-              <label for="password" class="sr-only">Password</label>
+            <div class="space-y-grid-xs">
+              <label for="password" class="text-sm font-medium text-slate-700">Password</label>
               <input formControlName="password" id="password" name="password" type="password" autocomplete="new-password" required 
-                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" 
-                placeholder="Password">
+                class="w-full h-11 px-grid-md rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm transition-all" 
+                placeholder="••••••••"
+                [attr.aria-invalid]="signupForm.get('password')?.invalid && signupForm.get('password')?.touched">
             </div>
-            <div>
-              <label for="org-id" class="sr-only">Organization ID</label>
+            <div class="space-y-grid-xs">
+              <label for="org-id" class="text-sm font-medium text-slate-700">Organization ID</label>
               <input formControlName="organizationId" id="org-id" name="organizationId" type="text" required 
-                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" 
-                placeholder="Organization ID (e.g. org-1)">
+                class="w-full h-11 px-grid-md rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm transition-all" 
+                placeholder="e.g. org-1"
+                [attr.aria-invalid]="signupForm.get('organizationId')?.invalid && signupForm.get('organizationId')?.touched">
             </div>
           </div>
 
           @if (error()) {
-            <div class="text-red-500 text-sm text-center">{{ error() }}</div>
+            <div class="bg-red-50 border border-red-100 text-red-600 text-xs py-grid-sm px-grid-md rounded-md text-center animate-in fade-in slide-in-from-top-1">
+              {{ error() }}
+            </div>
           }
 
           @if (success()) {
-            <div class="text-green-500 text-sm text-center">Signup successful! Please check your email and then <a routerLink="/login" class="font-medium text-indigo-600 hover:text-indigo-500">sign in</a>.</div>
+            <div class="bg-green-50 border border-green-100 text-green-700 text-xs py-grid-sm px-grid-md rounded-md text-center animate-in fade-in slide-in-from-top-1">
+              Signup successful! Please <a routerLink="/login" class="font-bold underline">sign in</a>.
+            </div>
           }
 
-          <div>
+          <div class="space-y-grid-lg">
             <button type="submit" [disabled]="isLoading() || success()"
-              class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50">
+              class="w-full h-11 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-all focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed">
               {{ isLoading() ? 'Creating account...' : 'Create Account' }}
             </button>
-          </div>
 
-          <div class="text-center">
-            <a routerLink="/login" class="font-medium text-indigo-600 hover:text-indigo-500">
-              Already have an account? Sign in
-            </a>
+            <p class="text-sm text-slate-600 text-center">
+              Already have an account? 
+              <a routerLink="/login" class="text-indigo-600 hover:underline font-medium transition-colors">
+                Sign in
+              </a>
+            </p>
           </div>
         </form>
       </div>
@@ -74,6 +83,14 @@ export class SignupPageComponent implements OnInit {
   private authStore = inject(AuthStore);
   private supabase = inject(SupabaseService);
   private router = inject(Router);
+
+  constructor() {
+    effect(() => {
+      if (this.authStore.isAuthenticated() && !this.authStore.isLoading()) {
+        this.router.navigate(['/dashboard/tasks']);
+      }
+    });
+  }
 
   ngOnInit() {
     if (this.authStore.isAuthenticated()) {

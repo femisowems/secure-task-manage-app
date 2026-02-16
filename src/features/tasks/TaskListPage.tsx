@@ -39,12 +39,12 @@ export const TaskListPage: React.FC = () => {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="max-w-8xl mx-auto space-y-grid-xl">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-900">Tasks</h1>
+                <h1 className="text-h1 font-bold text-text-primary">Tasks</h1>
                 <button
                     onClick={openCreate}
-                    className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+                    className="flex items-center gap-grid-sm px-grid-md py-grid-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors shadow-sm"
                 >
                     <Plus size={20} />
                     New Task
@@ -52,40 +52,40 @@ export const TaskListPage: React.FC = () => {
             </div>
 
             {loading ? (
-                <div className="text-center py-10 text-gray-500">Loading tasks...</div>
+                <div className="text-center py-20 text-text-secondary">Loading tasks...</div>
             ) : tasks.length === 0 ? (
-                <div className="text-center py-10 bg-white rounded-lg border border-gray-200 text-gray-500">
+                <div className="text-center py-20 bg-surface-glass backdrop-blur-md rounded-card border border-border-subtle text-text-secondary">
                     No tasks found. Create one to get started.
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-grid-lg">
                     {tasks.map((task) => (
-                        <div key={task.id} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-                            <div className="flex justify-between items-start mb-4">
-                                <span className="px-2 py-1 text-xs font-medium bg-blue-50 text-blue-700 rounded-full">
+                        <div key={task.id} className="bg-surface-glass backdrop-blur-md p-grid-lg rounded-card border border-border-subtle shadow-sm hover:shadow-md transition-shadow">
+                            <div className="flex justify-between items-start mb-grid-md">
+                                <span className="px-grid-sm py-1 text-caption font-bold uppercase bg-blue-50 text-blue-700 rounded-pill">
                                     {task.category}
                                 </span>
-                                <span className={`px-2 py-1 text-xs font-medium rounded-full ${task.status === 'Completed' ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'
+                                <span className={`px-grid-sm py-1 text-caption font-bold uppercase rounded-pill ${task.status === 'Completed' ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'
                                     }`}>
                                     {task.status}
                                 </span>
                             </div>
 
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">{task.title}</h3>
-                            <p className="text-gray-600 text-sm mb-4 line-clamp-2">{task.description}</p>
+                            <h3 className="text-h4 font-semibold text-text-primary mb-grid-sm leading-tight">{task.title}</h3>
+                            <p className="text-text-secondary text-body-sm mb-grid-md line-clamp-2">{task.description}</p>
 
                             {canEdit && (
-                                <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-gray-100">
+                                <div className="flex justify-end gap-grid-sm mt-grid-md pt-grid-md border-t border-border-subtle">
                                     <button
                                         onClick={() => openEdit(task)}
-                                        className="p-2 text-gray-400 hover:text-indigo-600 transition-colors"
+                                        className="p-grid-sm text-text-secondary hover:text-indigo-600 transition-colors"
                                         title="Edit"
                                     >
                                         <Pencil size={18} />
                                     </button>
                                     <button
                                         onClick={() => deleteTask(task.id)}
-                                        className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                                        className="p-grid-sm text-text-secondary hover:text-red-600 transition-colors"
                                         title="Delete"
                                     >
                                         <Trash2 size={18} />
@@ -98,15 +98,15 @@ export const TaskListPage: React.FC = () => {
             )}
 
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-lg w-full max-w-md p-6 relative">
+                <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-grid-md z-50">
+                    <div className="bg-surface rounded-modal w-full max-w-md p-grid-xl relative shadow-2xl border border-border-subtle">
                         <button
                             onClick={() => setIsModalOpen(false)}
-                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+                            className="absolute top-grid-md right-grid-md text-text-secondary hover:text-text-primary transition-colors"
                         >
                             <X size={24} />
                         </button>
-                        <h2 className="text-xl font-bold mb-4">{editingTask ? 'Edit Task' : 'New Task'}</h2>
+                        <h2 className="text-h3 font-bold mb-grid-lg text-text-primary">{editingTask ? 'Edit Task' : 'New Task'}</h2>
                         <TaskForm
                             initialData={editingTask || undefined}
                             onSubmit={editingTask ? handleUpdate : handleCreate}

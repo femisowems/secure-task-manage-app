@@ -15,20 +15,20 @@ type SortOption = 'newest' | 'oldest' | 'priority' | 'title';
   standalone: true,
   imports: [CommonModule, LucideAngularModule, TaskFormComponent, FormsModule, DragDropModule],
   template: `
-    <div class="space-y-6">
-      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <h1 class="text-2xl font-bold text-gray-900">Tasks</h1>
+    <div class="max-w-8xl mx-auto space-y-grid-xl">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-grid-md">
+        <h1 class="text-h1 font-bold text-text-primary">Tasks</h1>
         
-        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+        <div class="flex flex-wrap items-center gap-grid-md w-full md:w-auto">
           <!-- Search -->
           <div class="relative flex-1 md:w-64">
-            <lucide-icon name="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" [size]="18"></lucide-icon>
+            <lucide-icon name="search" class="absolute left-grid-md top-1/2 -translate-y-1/2 text-text-secondary" [size]="18"></lucide-icon>
             <input
               type="text"
               [ngModel]="searchQuery()"
               (ngModelChange)="searchQuery.set($event)"
               placeholder="Search tasks..."
-              class="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
+              class="w-full pl-grid-lg pr-grid-md py-grid-sm bg-surface border border-border-subtle rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-body-sm text-text-primary"
             >
           </div>
 
@@ -64,7 +64,7 @@ type SortOption = 'newest' | 'oldest' | 'priority' | 'title';
 
           <button
             (click)="openCreate()"
-            class="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors shadow-sm"
+            class="flex items-center gap-grid-sm px-grid-md py-grid-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors shadow-sm"
           >
             <lucide-icon name="plus" [size]="20"></lucide-icon>
             New Task
@@ -78,37 +78,37 @@ type SortOption = 'newest' | 'oldest' | 'priority' | 'title';
           <p class="text-gray-500">Loading your tasks...</p>
         </div>
       } @else {
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" cdkDropListGroup>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-grid-lg" cdkDropListGroup>
           <!-- TODO Column -->
-          <div class="flex flex-col h-full bg-gray-50 rounded-lg p-4 border border-gray-200">
-            <h2 class="font-bold text-gray-700 flex items-center gap-2 mb-4 px-2 uppercase tracking-wider text-xs">
+          <div class="flex flex-col h-full bg-surface-glass backdrop-blur-md rounded-card p-grid-md border border-border-subtle shadow-sm">
+            <h2 class="text-h4 font-bold text-text-primary flex items-center gap-grid-sm mb-grid-lg px-grid-sm uppercase tracking-wider text-caption">
               <span class="w-2 h-2 rounded-full bg-gray-400"></span>
               To Do
-              <span class="bg-gray-200 text-gray-600 px-2 py-0.5 rounded ml-auto text-[10px]">{{ todoTasks().length }}</span>
+              <span class="bg-gray-100 text-text-secondary px-grid-sm py-0.5 rounded ml-auto text-caption font-medium">{{ todoTasks().length }}</span>
             </h2>
             
             <div
               cdkDropList
               [cdkDropListData]="todoTasks()"
               (cdkDropListDropped)="drop($event, statusMap.TODO)"
-              class="flex-1 space-y-4 min-h-[500px]"
+              class="flex-1 space-y-grid-md min-h-[500px]"
             >
               @for (task of todoTasks(); track task.id) {
-                <div cdkDrag class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-move hover:shadow-md transition-all active:scale-95 group">
-                  <div class="flex flex-col gap-2">
+                <div cdkDrag class="bg-surface p-grid-lg rounded-card shadow-sm border border-border-subtle cursor-move hover:shadow-md transition-all active:scale-95 group">
+                  <div class="flex flex-col gap-grid-sm">
                     <div class="flex justify-between items-start">
-                      <span [class]="'px-2 py-0.5 text-[10px] font-bold uppercase rounded ' + getCategoryClass(task.category)">
+                      <span [class]="'px-grid-sm py-0.5 text-caption font-bold uppercase rounded-pill ' + getCategoryClass(task.category)">
                         {{ task.category }}
                       </span>
-                      <span [class]="'text-[10px] font-bold ' + getPriorityColor(task.priority)">
+                      <span [class]="'text-caption font-bold uppercase ' + getPriorityColor(task.priority)">
                         {{ task.priority }}
                       </span>
                     </div>
-                    <h3 class="font-semibold text-gray-900 leading-tight">{{ task.title }}</h3>
-                    <p class="text-xs text-gray-500 line-clamp-2">{{ task.description }}</p>
-                    <div class="flex justify-end gap-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <h3 class="text-body font-semibold text-text-primary leading-tight">{{ task.title }}</h3>
+                    <p class="text-body-sm text-text-secondary line-clamp-2">{{ task.description }}</p>
+                    <div class="flex justify-end gap-grid-sm mt-grid-md opacity-0 group-hover:opacity-100 transition-opacity">
                       @if (canEdit()) {
-                        <button (click)="openEdit(task)" class="text-gray-400 hover:text-indigo-600">
+                        <button (click)="openEdit(task)" class="text-text-secondary hover:text-indigo-600">
                           <lucide-icon name="pencil" [size]="14"></lucide-icon>
                         </button>
                       }
@@ -120,35 +120,35 @@ type SortOption = 'newest' | 'oldest' | 'priority' | 'title';
           </div>
 
           <!-- IN PROGRESS Column -->
-          <div class="flex flex-col h-full bg-blue-50/50 rounded-lg p-4 border border-blue-100">
-            <h2 class="font-bold text-blue-800 flex items-center gap-2 mb-4 px-2 uppercase tracking-wider text-xs">
+          <div class="flex flex-col h-full bg-blue-50/30 backdrop-blur-sm rounded-card p-grid-md border border-blue-100 shadow-sm">
+            <h2 class="text-h4 font-bold text-blue-800 flex items-center gap-grid-sm mb-grid-lg px-grid-sm uppercase tracking-wider text-caption">
               <span class="w-2 h-2 rounded-full bg-blue-500"></span>
               In Progress
-              <span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded ml-auto text-[10px]">{{ inProgressTasks().length }}</span>
+              <span class="bg-blue-100 text-blue-700 px-grid-sm py-0.5 rounded ml-auto text-caption font-medium">{{ inProgressTasks().length }}</span>
             </h2>
             
             <div
               cdkDropList
               [cdkDropListData]="inProgressTasks()"
               (cdkDropListDropped)="drop($event, statusMap.IN_PROGRESS)"
-              class="flex-1 space-y-4 min-h-[500px]"
+              class="flex-1 space-y-grid-md min-h-[500px]"
             >
               @for (task of inProgressTasks(); track task.id) {
-                <div cdkDrag class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-move hover:shadow-md transition-all active:scale-95 group">
-                   <div class="flex flex-col gap-2">
+                <div cdkDrag class="bg-surface p-grid-lg rounded-card shadow-sm border border-border-subtle cursor-move hover:shadow-md transition-all active:scale-95 group">
+                   <div class="flex flex-col gap-grid-sm">
                     <div class="flex justify-between items-start">
-                      <span [class]="'px-2 py-0.5 text-[10px] font-bold uppercase rounded ' + getCategoryClass(task.category)">
+                      <span [class]="'px-grid-sm py-0.5 text-caption font-bold uppercase rounded-pill ' + getCategoryClass(task.category)">
                         {{ task.category }}
                       </span>
-                      <span [class]="'text-[10px] font-bold ' + getPriorityColor(task.priority)">
+                      <span [class]="'text-caption font-bold uppercase ' + getPriorityColor(task.priority)">
                         {{ task.priority }}
                       </span>
                     </div>
-                    <h3 class="font-semibold text-gray-900 leading-tight">{{ task.title }}</h3>
-                    <p class="text-xs text-gray-500 line-clamp-2">{{ task.description }}</p>
-                    <div class="flex justify-end gap-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <h3 class="text-body font-semibold text-text-primary leading-tight">{{ task.title }}</h3>
+                    <p class="text-body-sm text-text-secondary line-clamp-2">{{ task.description }}</p>
+                    <div class="flex justify-end gap-grid-sm mt-grid-md opacity-0 group-hover:opacity-100 transition-opacity">
                       @if (canEdit()) {
-                        <button (click)="openEdit(task)" class="text-gray-400 hover:text-indigo-600">
+                        <button (click)="openEdit(task)" class="text-text-secondary hover:text-indigo-600">
                           <lucide-icon name="pencil" [size]="14"></lucide-icon>
                         </button>
                       }
@@ -160,35 +160,35 @@ type SortOption = 'newest' | 'oldest' | 'priority' | 'title';
           </div>
 
           <!-- COMPLETED Column -->
-          <div class="flex flex-col h-full bg-green-50/50 rounded-lg p-4 border border-green-100">
-            <h2 class="font-bold text-green-800 flex items-center gap-2 mb-4 px-2 uppercase tracking-wider text-xs">
+          <div class="flex flex-col h-full bg-green-50/30 backdrop-blur-sm rounded-card p-grid-md border border-green-100 shadow-sm">
+            <h2 class="text-h4 font-bold text-green-800 flex items-center gap-grid-sm mb-grid-lg px-grid-sm uppercase tracking-wider text-caption">
               <span class="w-2 h-2 rounded-full bg-green-500"></span>
               Completed
-              <span class="bg-green-100 text-green-700 px-2 py-0.5 rounded ml-auto text-[10px]">{{ completedTasks().length }}</span>
+              <span class="bg-green-100 text-green-700 px-grid-sm py-0.5 rounded ml-auto text-caption font-medium">{{ completedTasks().length }}</span>
             </h2>
             
             <div
               cdkDropList
               [cdkDropListData]="completedTasks()"
               (cdkDropListDropped)="drop($event, statusMap.COMPLETED)"
-              class="flex-1 space-y-4 min-h-[500px]"
+              class="flex-1 space-y-grid-md min-h-[500px]"
             >
               @for (task of completedTasks(); track task.id) {
-                <div cdkDrag class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-move hover:shadow-md transition-all active:scale-95 group opacity-75">
-                   <div class="flex flex-col gap-2">
+                <div cdkDrag class="bg-surface p-grid-lg rounded-card shadow-sm border border-border-subtle cursor-move hover:shadow-md transition-all active:scale-95 group opacity-75">
+                   <div class="flex flex-col gap-grid-sm">
                     <div class="flex justify-between items-start">
-                      <span [class]="'px-2 py-0.5 text-[10px] font-bold uppercase rounded ' + getCategoryClass(task.category)">
+                      <span [class]="'px-grid-sm py-0.5 text-caption font-bold uppercase rounded-pill ' + getCategoryClass(task.category)">
                         {{ task.category }}
                       </span>
                     </div>
-                    <h3 class="font-semibold text-gray-900 leading-tight line-through opacity-50">{{ task.title }}</h3>
-                    <div class="flex justify-end gap-2 mt-2">
+                    <h3 class="text-body font-semibold text-text-primary leading-tight line-through opacity-50">{{ task.title }}</h3>
+                    <div class="flex justify-end gap-grid-sm mt-grid-md">
                       @if (canEdit()) {
-                        <div class="flex gap-2">
-                          <button (click)="openEdit(task)" class="text-gray-400 hover:text-indigo-600">
+                        <div class="flex gap-grid-sm">
+                          <button (click)="openEdit(task)" class="text-text-secondary hover:text-indigo-600">
                             <lucide-icon name="pencil" [size]="14"></lucide-icon>
                           </button>
-                          <button (click)="deleteTask(task.id)" class="text-gray-400 hover:text-red-600">
+                          <button (click)="deleteTask(task.id)" class="text-text-secondary hover:text-red-600">
                             <lucide-icon name="trash-2" [size]="14"></lucide-icon>
                           </button>
                         </div>
@@ -203,15 +203,15 @@ type SortOption = 'newest' | 'oldest' | 'priority' | 'title';
       }
 
       @if (isModalOpen()) {
-        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div class="bg-white rounded-lg w-full max-w-md p-6 relative shadow-2xl">
+        <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-grid-md z-50">
+          <div class="bg-surface rounded-modal w-full max-w-md p-grid-xl relative shadow-2xl border border-border-subtle">
             <button
               (click)="isModalOpen.set(false)"
-              class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+              class="absolute top-grid-md right-grid-md text-text-secondary hover:text-text-primary transition-colors"
             >
               <lucide-icon name="x" [size]="24"></lucide-icon>
             </button>
-            <h2 class="text-xl font-bold mb-4">{{ editingTask() ? 'Edit Task' : 'New Task' }}</h2>
+            <h2 class="text-h3 font-bold mb-grid-lg text-text-primary">{{ editingTask() ? 'Edit Task' : 'New Task' }}</h2>
             
             <app-task-form
               [task]="editingTask() || undefined"
@@ -313,10 +313,10 @@ export class TaskListPageComponent implements OnInit {
 
   getCategoryClass(category: string) {
     const classes: Record<string, string> = {
-      [TaskCategory.WORK]: 'bg-indigo-100 text-indigo-800',
-      [TaskCategory.PERSONAL]: 'bg-emerald-100 text-emerald-800',
-      [TaskCategory.SHOPPING]: 'bg-amber-100 text-amber-800',
-      [TaskCategory.OTHER]: 'bg-slate-100 text-slate-800'
+      [TaskCategory.WORK]: 'bg-indigo-50 text-indigo-700',
+      [TaskCategory.PERSONAL]: 'bg-emerald-50 text-emerald-700',
+      [TaskCategory.SHOPPING]: 'bg-amber-50 text-amber-700',
+      [TaskCategory.OTHER]: 'bg-slate-50 text-slate-700'
     };
     return classes[category] || classes[TaskCategory.OTHER];
   }
