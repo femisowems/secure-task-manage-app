@@ -1,5 +1,6 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, signal, computed, inject, effect } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { SupabaseService } from './supabase.service';
 import { User, UserRole } from '../models';
 import { environment } from '../../../environments/environment';
@@ -11,6 +12,7 @@ import { firstValueFrom } from 'rxjs';
 export class AuthStore {
     private supabase = inject(SupabaseService);
     private http = inject(HttpClient);
+    private router = inject(Router);
 
     private _user = signal<User | null>(null);
     private _loading = signal<boolean>(true);
@@ -65,5 +67,6 @@ export class AuthStore {
         await this.supabase.auth.signOut();
         this._user.set(null);
         this._token.set(null);
+        this.router.navigate(['/login']);
     }
 }

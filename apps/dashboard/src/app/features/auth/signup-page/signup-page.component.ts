@@ -1,14 +1,15 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthStore } from '../../../core/services/auth.store';
 import { SupabaseService } from '../../../core/services/supabase.service';
 
 @Component({
-    selector: 'app-signup-page',
-    standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, RouterLink],
-    template: `
+  selector: 'app-signup-page',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  template: `
     <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg border border-gray-100">
         <div>
@@ -64,51 +65,58 @@ import { SupabaseService } from '../../../core/services/supabase.service';
       </div>
     </div>
   `,
-    styles: [`
+  styles: [`
     :host { display: block; }
   `]
 })
-export class SignupPageComponent {
-    private fb = inject(FormBuilder);
-    private supabase = inject(SupabaseService);
-    private router = inject(Router);
+export class SignupPageComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private authStore = inject(AuthStore);
+  private supabase = inject(SupabaseService);
+  private router = inject(Router);
 
-    signupForm = this.fb.group({
-        email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
-        organizationId: ['', [Validators.required]]
-    });
-
-    isLoading = signal(false);
-    error = signal('');
-    success = signal(false);
-
-    async onSubmit() {
-        if (this.signupForm.invalid) return;
-
-        try {
-            this.isLoading.set(true);
-            this.error.set('');
-
-            const { email, password, organizationId } = this.signupForm.value;
-            const { error } = await this.supabase.auth.signUp({
-                email: email!,
-                password: password!,
-                options: {
-                    data: {
-                        organization_id: organizationId,
-                        role: 'Owner' // Default for new signups in this simplified version
-                    }
-                }
-            });
-
-            if (error) throw error;
-
-            this.success.set(true);
-        } catch (err: any) {
-            this.error.set(err.message || 'Failed to sign up');
-        } finally {
-            this.isLoading.set(false);
-        }
+  ngOnInit() {
+    if (this.authStore.isAuthenticated()) {
+      this.router.navigate(['/dashboard/tasks']);
     }
+  }
+
+  signupForm = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    organizationId: ['', [Validators.required]]
+  });
+
+  isLoading = signal(false);
+  error = signal('');
+  success = signal(false);
+
+  async onSubmit() {
+    if (this.signupForm.invalid) return;
+
+    try {
+      this.isLoading.set(true);
+      this.error.set('');
+
+      const { email, password, organizationId } = this.signupForm.value;
+      const { error } = await this.supabase.auth.signUp({
+        email: email!,
+        password: password!,
+        options: {
+          data: {
+            organization_id: organizationId,
+            role: 'Owner' // Default for new signups in this simplified version
+          }
+        }
+      });
+
+      if (error) throw error;
+
+      this.success.set(true);
+    } catch (err: any) {
+      this.error.set(err.message || 'Failed to sign up');
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
 }

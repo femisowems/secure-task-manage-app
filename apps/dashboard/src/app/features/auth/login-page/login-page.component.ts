@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, isDevMode, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -6,11 +6,26 @@ import { AuthStore } from '../../../core/services/auth.store';
 import { SupabaseService } from '../../../core/services/supabase.service';
 
 @Component({
-    selector: 'app-login-page',
-    standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, RouterLink],
-    template: `
-    <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  selector: 'app-login-page',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  template: `
+    <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 relative">
+      @if (isDev) {
+        <div class="absolute top-4 right-4 bg-yellow-50 p-4 rounded-md shadow-md border border-yellow-200 text-sm max-w-xs z-50">
+          <h3 class="font-bold text-yellow-800 mb-2">Dev Credentials</h3>
+          <div class="space-y-2 text-left">
+            <div>
+              <span class="font-semibold block text-yellow-700">Admin (Owner):</span>
+              <code class="bg-yellow-100 px-1 rounded">admin@test.com</code> / <code class="bg-yellow-100 px-1 rounded">password123</code>
+            </div>
+            <div>
+              <span class="font-semibold block text-yellow-700">User (Viewer):</span>
+              <code class="bg-yellow-100 px-1 rounded">user@test.com</code> / <code class="bg-yellow-100 px-1 rounded">password123</code>
+            </div>
+          </div>
+        </div>
+      }
       <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg border border-gray-100">
         <div>
           <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
@@ -55,45 +70,52 @@ import { SupabaseService } from '../../../core/services/supabase.service';
       </div>
     </div>
   `,
-    styles: [`
+  styles: [`
     :host { display: block; }
   `]
 })
-export class LoginPageComponent {
-    private fb = inject(FormBuilder);
-    private authStore = inject(AuthStore);
-    private supabase = inject(SupabaseService);
-    private router = inject(Router);
+export class LoginPageComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private authStore = inject(AuthStore);
+  private supabase = inject(SupabaseService);
+  private router = inject(Router);
+  protected isDev = isDevMode();
 
-    loginForm = this.fb.group({
-        email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required]]
-    });
-
-    isLoading = signal(false);
-    error = signal('');
-
-    async onSubmit() {
-        if (this.loginForm.invalid) return;
-
-        try {
-            this.isLoading.set(true);
-            this.error.set('');
-
-            const { email, password } = this.loginForm.value;
-            const { error } = await this.supabase.auth.signInWithPassword({
-                email: email!,
-                password: password!
-            });
-
-            if (error) throw error;
-
-            // AuthStore will automatically pick up the session change
-            this.router.navigate(['/dashboard/tasks']);
-        } catch (err: any) {
-            this.error.set(err.message || 'Failed to login');
-        } finally {
-            this.isLoading.set(false);
-        }
+  ngOnInit() {
+    if (this.authStore.isAuthenticated()) {
+      this.router.navigate(['/dashboard/tasks']);
     }
+  }
+
+  loginForm = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required]]
+  });
+
+  isLoading = signal(false);
+  error = signal('');
+
+  async onSubmit() {
+    if (this.loginForm.invalid) return;
+
+    try {
+      this.isLoading.set(true);
+      this.error.set('');
+
+      const { email, password } = this.loginForm.value;
+      const { error } = await this.supabase.auth.signInWithPassword({
+        email: email!,
+        password: password!
+      });
+
+      if (error) throw error;
+
+      // AuthStore will automatically pick up the session change
+      this.router.navigate(['/dashboard/tasks']);
+    } catch (err: any) {
+      this.error.set(err.message || 'Failed to login');
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
 }
