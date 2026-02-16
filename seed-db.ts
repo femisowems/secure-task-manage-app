@@ -1,4 +1,4 @@
-
+import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { User, Organization, Task, AuditLog } from './libs/data/src/lib/entities';
 import { UserRole } from './libs/data/src/lib/enums';
@@ -55,6 +55,52 @@ async function seed() {
         });
         await userRepo.save(standardUser);
         console.log('Created Standard User: user@test.com / password123');
+    }
+
+    // 4. Create Sample Tasks
+    const taskRepo = dataSource.getRepository(Task);
+    const existingTasks = await taskRepo.count();
+    if (existingTasks === 0) {
+        const tasks = [
+            {
+                title: 'Review System Logs',
+                description: 'Analyze audit logs for suspicious activity',
+                category: 'Security',
+                status: 'todo',
+                organizationId: defaultOrg.id,
+                createdBy: admin.id
+            },
+            {
+                title: 'Update RBAC Permissions',
+                description: 'Refine Owner permissions for multi-tenant support',
+                category: 'Configuration',
+                status: 'in-progress',
+                organizationId: defaultOrg.id,
+                createdBy: admin.id
+            },
+            {
+                title: 'Design System Unification',
+                description: 'Migrate React components to shared design system',
+                category: 'Migration',
+                status: 'done',
+                organizationId: defaultOrg.id,
+                createdBy: admin.id
+            },
+            {
+                title: 'Performance Audit',
+                description: 'Identify bottlenecks in database queries',
+                category: 'Engineering',
+                status: 'todo',
+                organizationId: defaultOrg.id,
+                createdBy: admin.id
+            }
+        ];
+
+        for (const taskData of tasks) {
+            const task = taskRepo.create(taskData);
+            await taskRepo.save(task);
+        }
+        console.log(`Created ${tasks.length} sample tasks`);
     }
 
     await dataSource.destroy();

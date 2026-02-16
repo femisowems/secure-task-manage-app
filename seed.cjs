@@ -23,24 +23,19 @@ async function seed() {
     try {
         console.log('Connecting to database and creating tables if needed...');
 
-        // Create Tables
         await run(`
-            CREATE TABLE IF NOT EXISTS organizations (
+            CREATE TABLE IF NOT EXISTS tasks (
                 id TEXT PRIMARY KEY,
-                name TEXT NOT NULL,
-                parentOrganizationId TEXT
-            )
-        `);
-
-        await run(`
-            CREATE TABLE IF NOT EXISTS users (
-                id TEXT PRIMARY KEY,
-                email TEXT UNIQUE NOT NULL,
-                passwordHash TEXT NOT NULL,
-                role TEXT NOT NULL DEFAULT 'Viewer',
+                title TEXT NOT NULL,
+                description TEXT NOT NULL,
+                category TEXT NOT NULL,
+                status TEXT NOT NULL,
                 organizationId TEXT NOT NULL,
+                createdBy TEXT NOT NULL,
                 createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (organizationId) REFERENCES organizations (id)
+                updatedAt TEXT DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (organizationId) REFERENCES organizations (id),
+                FOREIGN KEY (createdBy) REFERENCES users (id)
             )
         `);
 
@@ -59,12 +54,16 @@ async function seed() {
 
         // 2. Create Admin
         let admin = await get("SELECT * FROM users WHERE email = ?", ['admin@test.com']);
+        let adminId;
         if (!admin) {
+            adminId = crypto.randomUUID();
             await run(
                 "INSERT INTO users (id, email, passwordHash, role, organizationId, createdAt) VALUES (?, ?, ?, ?, ?, ?)",
-                [crypto.randomUUID(), 'admin@test.com', passwordHash, 'Owner', orgId, new Date().toISOString()]
+                [adminId, 'admin@test.com', passwordHash, 'Owner', orgId, new Date().toISOString()]
             );
             console.log('Created Admin: admin@test.com / password123');
+        } else {
+            adminId = admin.id;
         }
 
         // 3. Create User
@@ -75,6 +74,25 @@ async function seed() {
                 [crypto.randomUUID(), 'user@test.com', passwordHash, 'Viewer', orgId, new Date().toISOString()]
             );
             console.log('Created User: user@test.com / password123');
+        }
+
+        // 4. Create Sample Tasks
+        const taskCount = await get("SELECT COUNT(*) as count FROM tasks");
+        if (taskCount.count === 0) {
+            const tasks = [
+                ['Review System Logs', 'Analyze audit logs for suspicious activity', 'Security', 'todo', orgId, adminId],
+                ['Update RBAC Permissions', 'Refine Owner permissions for multi-tenant support', 'Configuration', 'in-progress', orgId, adminId],
+                ['Design System Unification', 'Migrate React components to shared design system', 'Migration', 'done', orgId, adminId],
+                ['Performance Audit', 'Identify bottlenecks in database queries', 'Engineering', 'todo', orgId, adminId]
+            ];
+
+            for (const task of tasks) {
+                await run(
+                    "INSERT INTO tasks (id, title, description, category, status, organizationId, createdBy) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    [crypto.randomUUID(), ...task]
+                );
+            }
+            console.log(`Created ${tasks.length} sample tasks`);
         }
 
         console.log('\nSeeding complete! You can now log in with:');

@@ -1,6 +1,6 @@
-# Secure Task Management App
+# Secure Task Management App (Angular Migration)
 
-A premium, enterprise-grade **Secure Task Management Application** featuring dual frontend support (React & Angular) and a robust NestJS backend. This project demonstrates advanced security patterns, including Supabase JWT integration, hierarchical Role-Based Access Control (RBAC), and multi-tenant Organization Scoping.
+A premium, enterprise-grade **Secure Task Management Application** featuring a modern Angular frontend and a robust NestJS backend. This project demonstrates advanced security patterns, including Supabase JWT integration, hierarchical Role-Based Access Control (RBAC), and multi-tenant Organization Scoping.
 
 ## 🚀 Key Features
 
@@ -9,12 +9,11 @@ A premium, enterprise-grade **Secure Task Management Application** featuring dua
   - **Hierarchical RBAC**: Granular permission system (`Owner` > `Admin` > `Viewer`).
   - **Multi-Tenant Scoping**: Strict organization isolation with parent-child relationship support.
   - **Compliance Logging**: Automated audit tracking for all sensitive operations (Create, Update, Delete).
-- **Dual Frontend Architecture**:
+- **Modern Angular Frontend**:
   - **Angular Dashboard**: Modern Angular 19+ app utilizing **Signals**, **Angular CDK (Kanban Board)**, and premium Tailwind v4 styling.
-  - **React Frontend**: High-performance React 19 + TypeScript + Vite implementation.
 - **Premium Design**:
   - **Interactive Kanban**: Drag-and-drop task management with real-time status updates.
-  - **Aesthetics**: Glassmorphism UI with Lucide icons and Inter typography across frameworks.
+  - **Aesthetics**: Glassmorphism UI with Lucide icons and Inter typography.
 
 ## 🔑 Test Credentials
 
@@ -50,7 +49,6 @@ npm install
 
 | Command | Action | URL |
 | :--- | :--- | :--- |
-| `npm run start:react` | Start React Frontend | [http://localhost:5173](http://localhost:5173) |
 | `npm run start:angular` | Start Angular Dashboard | [http://localhost:4200](http://localhost:4200) |
 | `npm run start:api` | Start NestJS Backend | [http://localhost:3001/api](http://localhost:3001/api) |
 | `npm run start:all` | Start EVERYTHING | (All of the above) |
@@ -71,10 +69,9 @@ npm install
 
 ```text
 ├── apps/api/src/app/       # Backend (NestJS)
-├── apps/dashboard/         # New Angular Dashboard (v19)
+├── apps/dashboard/         # Modern Angular Dashboard (v19)
 │   ├── src/app/core/       # Signals-based Stores & Interceptors
 │   └── src/app/features/   # Kanban Board & Audit Components
-├── src/                    # Original React 19 Frontend
 ├── libs/                   # Shared Business Logic (RBAC/Org Scoping)
 ├── scripts/                # Database migration & utility scripts
 └── database.sqlite         # Local SQLite storage
@@ -82,6 +79,3 @@ npm install
 
 ## 📄 License
 MIT
-
----
-**Note**: This workspace is optimized for multi-framework experimentation. All frontends communicate with the same secure NestJS API on port 3001.
