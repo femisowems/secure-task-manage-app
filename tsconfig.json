@@ -12,11 +12,20 @@
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {
+            "@secure-task-manage-app/data": [
+                "libs/data/src/lib/entities.ts"
+            ],
             "@secure-task-manage-app/data/*": [
                 "libs/data/src/lib/*"
             ],
+            "@secure-task-manage-app/auth": [
+                "libs/auth/src/lib/rbac.service.ts"
+            ],
             "@secure-task-manage-app/auth/*": [
                 "libs/auth/src/lib/*"
+            ],
+            "@secure-task-manage-app/design-system": [
+                "libs/design-system/tokens.ts"
             ],
             "@secure-task-manage-app/design-system/*": [
                 "libs/design-system/*"
