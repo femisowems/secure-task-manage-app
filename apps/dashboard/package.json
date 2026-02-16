@@ -4,9 +4,9 @@
   "type": "module",
   "scripts": {
     "ng": "ng",
-    "prestart": "npx @tailwindcss/cli -i src/styles.tailwind.css -o src/styles.css",
+    "prestart": "npx @tailwindcss/cli -i src/styles.tailwind.css -o src/styles.css --minify",
     "start": "ng serve",
-    "prebuild": "npx @tailwindcss/cli -i src/styles.tailwind.css -o src/styles.css",
+    "prebuild": "npx @tailwindcss/cli -i src/styles.tailwind.css -o src/styles.css --minify",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
