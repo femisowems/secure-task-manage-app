@@ -5,8 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "start:react": "vite",
+    "start:angular": "npm run start --prefix apps/dashboard",
     "start:api": "tsx watch apps/api/src/main.ts",
-    "start:all": "concurrently \"npm run dev\" \"npm run start:api\"",
+    "start:dashboard": "npm run start:angular",
+    "start:all": "concurrently \"npm run start:react\" \"npm run start:angular\" \"npm run start:api\"",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"

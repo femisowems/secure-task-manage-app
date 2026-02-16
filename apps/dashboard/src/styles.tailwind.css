@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@source "./app/**/*.{html,ts}";
+
+.test-scan-manual {
+    @apply bg-red-500 rounded-full;
+}
+
+/* You can add global styles to this file, and also import other style files */
