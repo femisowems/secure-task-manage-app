@@ -1,8 +1,19 @@
 import axios from 'axios';
 import { supabase } from './supabase.client';
 
+const rawUrl = import.meta.env.VITE_API_URL;
+let baseURL = rawUrl || 'http://localhost:3001/api';
+
+console.log('[API Config] Initializing:', { rawUrl, resolvedBaseURL: baseURL });
+
+// Defensive: Ensure /api suffix exists for the backend
+if (baseURL.includes('secure-task-manage-backend-api-production.up.railway.app') && !baseURL.endsWith('/api')) {
+    console.warn('[API Config] Base URL missing /api suffix. Appending it automatically.');
+    baseURL = `${baseURL}/api`;
+}
+
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3001/api',
+    baseURL,
 });
 
 let authToken: string | null = null;
