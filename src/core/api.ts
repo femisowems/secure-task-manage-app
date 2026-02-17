@@ -7,7 +7,8 @@ let baseURL = rawUrl || 'http://localhost:3001/api';
 console.log('[API Config] Initializing:', { rawUrl, resolvedBaseURL: baseURL });
 
 // Defensive: Ensure /api suffix exists for the backend
-if (baseURL.includes('secure-task-manage-backend-api-production.up.railway.app') && !baseURL.endsWith('/api')) {
+// Defensive: Ensure /api suffix exists for the backend
+if (baseURL.includes('onrender.com') && !baseURL.endsWith('/api')) {
     console.warn('[API Config] Base URL missing /api suffix. Appending it automatically.');
     baseURL = `${baseURL}/api`;
 }
