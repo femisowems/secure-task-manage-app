@@ -22,19 +22,10 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
-    "paths": {
-      "@secure-task-manage-app/data/*": [
-        "./libs/data/src/lib/*"
-      ],
-      "@secure-task-manage-app/auth/*": [
-        "./libs/auth/src/lib/*"
-      ]
-    }
+    "paths": {}
   },
   "include": [
-    "src",
-    "apps",
-    "libs"
+    "src"
   ],
   "references": [
     {
