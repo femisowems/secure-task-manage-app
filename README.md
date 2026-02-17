@@ -1,17 +1,18 @@
-# Secure Task Management App
+# Secure Task Management App (Frontend)
 
-A premium, enterprise-grade **Secure Task Management Application** featuring a high-performance React frontend and a robust NestJS backend. This project demonstrates advanced security patterns, including Supabase JWT integration, hierarchical Role-Based Access Control (RBAC), and multi-tenant Organization Scoping.
+A premium, enterprise-grade **Secure Task Management Application** featuring a high-performance React frontend. This project demonstrates advanced security patterns, including Supabase JWT integration, hierarchical Role-Based Access Control (RBAC), and multi-tenant Organization Scoping.
+
+**Note**: This repository contains the Frontend application only. The backend is deployed independently.
 
 ## 🚀 Key Features
 
 - **Enterprise Security**: 
-  - **Supabase Auth Integration**: Secure token exchange using Supabase JWTs with ES256 signature validation via JWKS.
+  - **Supabase Auth Integration**: Secure token exchange using Supabase JWTs with ES256 signature validation.
   - **Hierarchical RBAC**: Granular permission system (`Owner` > `Admin` > `Viewer`).
-  - **Multi-Tenant Scoping**: Strict organization isolation with parent-child relationship support.
-  - **Compliance Logging**: Automated audit tracking for all sensitive operations (Create, Update, Delete).
+  - **Multi-Tenant Scoping**: Strict organization isolation.
 - **Modern Tech Stack**:
   - **Frontend**: React 19 + TypeScript + Vite + Tailwind CSS v4.
-  - **Backend**: NestJS + TypeORM + SQLite (Local Dev).
+  - **Backend API**: Connected to external NestJS API.
   - **Design**: Premium Glassmorphism UI with Lucide icons and Inter typography.
 
 ## 🔑 Test Credentials
@@ -24,19 +25,19 @@ A premium, enterprise-grade **Secure Task Management Application** featuring a h
 ## 🛠️ Setup & Installation
 
 ### 1. Prerequisites
-Ensure you have a [Supabase](https://supabase.com) project created.
+- Node.js (Latest LTS recommended)
+- Supabase Project
 
 ### 2. Environment Configuration
 Create a `.env` file in the root directory:
+
 ```env
 # Supabase Configuration
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key
 
-# Backend Configuration
-SUPABASE_URL=https://your-project.supabase.co
-PORT=3001
-VITE_API_URL=http://localhost:3001/api
+# API Configuration
+VITE_API_URL=https://secure-task-manage-backend-api.onrender.com/api
 ```
 
 ### 3. Install Dependencies
@@ -44,22 +45,14 @@ VITE_API_URL=http://localhost:3001/api
 npm install
 ```
 
-### 4. Run Development Servers
+### 4. Run Development Server
 ```bash
-# Start Frontend & Backend concurrently
-npm run start:all
+npm run dev
 ```
 
 - **Frontend**: [http://localhost:5173](http://localhost:5173)
-- **API (Swagger)**: [http://localhost:3001/api](http://localhost:3001/api)
 
 ## 🏗️ Architecture Detail
-
-### Backend (NestJS)
-- **`SupabaseJwtStrategy`**: Validates incoming JWTs against Supabase's public keys (`ES256`).
-- **`RbacService`**: Centralized logic for role inheritance and permission checks.
-- **`OrgScopeService`**: Handles parent/child organization visibility logic.
-- **`AuditService`**: Intercepts actions to log user activity for audit trails.
 
 ### Frontend (React)
 - **`AuthContext`**: Manages session state and profile synchronization with the backend.
@@ -69,24 +62,15 @@ npm run start:all
 ## 📂 Project Structure
 
 ```text
-├── apps/api/src/app/       # Backend (NestJS)
-│   ├── auth/               # Auth controllers & strategies
-│   ├── audit/              # Audit logging modules
-│   └── tasks/              # Task management controllers
-├── libs/                   # Shared Business Logic
-│   ├── auth/               # RBAC, Org Scoping, Roles guards
-│   └── data/               # TypeORM Entities & Enums
 ├── src/                    # Frontend (React 19)
 │   ├── core/               # API clients & Auth context
 │   ├── features/           # Feature-based components (Tasks, Audit)
 │   ├── layout/             # Sidebar & Dashboard wrappers
 │   └── routes/             # Protected routing logic
-├── scripts/                # Database migration & utility scripts
-└── database.sqlite         # Local SQLite storage
+├── .env                    # Environment variables
+├── package.json            # Dependencies and scripts
+└── vite.config.ts          # Vite configuration
 ```
 
 ## 📄 License
 MIT
-
----
-**Note**: This project is optimized for high-performance development using `tsx` and `dotenv` for seamless environment management.
